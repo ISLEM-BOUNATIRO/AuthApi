@@ -1,4 +1,8 @@
 trigger:
+- task: DotNetCoreCLI@2
+  inputs:
+    azureSubscription: 'Azure subscription 1(5830070e-96f2-4488-8dd7-e2f61df3685c)'
+    command: 'build'
 - master
 
 pool:

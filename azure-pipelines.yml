@@ -1,8 +1,4 @@
 trigger:
-- task: DotNetCoreCLI@2
-  inputs:
-    azureSubscription: 'Azure subscription 1(5830070e-96f2-4488-8dd7-e2f61df3685c)'
-    command: 'build'
 - master
 
 pool:
@@ -15,29 +11,13 @@ steps:
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '8.0.x'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
+    version: '8.x.x' # Adapte à ta version de .NET
 
 - script: dotnet restore
   displayName: 'Restore dependencies'
 
-- script: dotnet build --configuration $(buildConfiguration) --no-restore
-  displayName: 'Build'
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'Build project'
 
-- script: dotnet test --configuration $(buildConfiguration) --no-restore --no-build --logger trx
-  displayName: 'Run Tests'
-
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'VSTest'
-    testResultsFiles: '**/*.trx'
-    failTaskOnFailedTests: true
-
-- script: dotnet publish --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)
-  displayName: 'Publish'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'drop'
-    publishLocation: 'Container'
+- script: dotnet test --configuration $(buildConfiguration) --no-build
+  displayName: 'Run tests'
